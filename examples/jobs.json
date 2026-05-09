@@ -1,0 +1,26 @@
+{
+  "quiet_hours": [
+    { "start": "22:00", "end": "06:00" }
+  ],
+  "max_idle_minutes": 180,
+  "jobs": [
+    {
+      "name": "billing-rollup",
+      "cron": "0 */6 * * *",
+      "duration_minutes": 35,
+      "tags": ["finance"]
+    },
+    {
+      "name": "warehouse-sync",
+      "cron": "0 0,6,12,18 * * *",
+      "duration_minutes": 20,
+      "tags": ["data"]
+    },
+    {
+      "name": "search-reindex",
+      "cron": "15 2 * * *",
+      "duration_minutes": 90,
+      "tags": ["search"]
+    }
+  ]
+}

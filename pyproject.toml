@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cron-window-audit"
+version = "0.1.0"
+description = "Audit cron schedules for collisions, quiet-hour runs, and idle gaps."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Mert Efe Kurt" }]
+keywords = ["cron", "cli", "scheduler", "audit", "operations"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+  "Topic :: System :: Systems Administration",
+]
+
+[project.scripts]
+cron-window-audit = "cron_window_audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
