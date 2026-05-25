@@ -1,3 +1,4 @@
+"""Core utilities for this package."""
 from __future__ import annotations
 
 from dataclasses import dataclass
