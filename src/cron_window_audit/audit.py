@@ -15,6 +15,7 @@ class AuditResult:
 
 
 def audit_schedule(config: AuditConfig, start: datetime, hours: int) -> AuditResult:
+    """Simulate configured cron jobs and report schedule risk findings."""
     if hours < 1:
         raise ValueError("hours must be greater than zero")
 
@@ -33,6 +34,7 @@ def _simulate_events(
     start: datetime,
     end: datetime,
 ) -> list[RunEvent]:
+    """Generate all matching job runs in the requested half-open time window."""
     compiled = [(job, CronExpression.parse(job.cron)) for job in config.jobs]
     cursor = start.replace(second=0, microsecond=0)
     events: list[RunEvent] = []
@@ -57,7 +59,7 @@ def _find_start_collisions(events: tuple[RunEvent, ...]) -> list[Finding]:
     for event in events:
         by_start.setdefault(event.starts_at, []).append(event)
 
-    findings = []
+    findings: list[Finding] = []
     for starts_at, group in sorted(by_start.items()):
         if len(group) > 1:
             names = tuple(event.job.name for event in group)
@@ -74,7 +76,7 @@ def _find_start_collisions(events: tuple[RunEvent, ...]) -> list[Finding]:
 
 
 def _find_runtime_overlaps(events: tuple[RunEvent, ...]) -> list[Finding]:
-    findings = []
+    findings: list[Finding] = []
     for left, right in combinations(events, 2):
         if left.job.name == right.job.name:
             continue
@@ -94,7 +96,7 @@ def _find_runtime_overlaps(events: tuple[RunEvent, ...]) -> list[Finding]:
 
 
 def _find_quiet_runs(events: tuple[RunEvent, ...], config: AuditConfig) -> list[Finding]:
-    findings = []
+    findings: list[Finding] = []
     for event in events:
         if any(window.contains(event.starts_at.time()) for window in config.quiet_windows):
             findings.append(
@@ -116,7 +118,7 @@ def _find_idle_gaps(
     if max_idle_minutes is None or len(events) < 2:
         return []
 
-    findings = []
+    findings: list[Finding] = []
     for previous, current in zip(events, events[1:]):
         gap = int((current.starts_at - previous.starts_at).total_seconds() // 60)
         if gap > max_idle_minutes:

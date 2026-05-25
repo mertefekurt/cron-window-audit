@@ -9,6 +9,7 @@ from .models import AuditConfig, CronJob, QuietWindow
 
 
 def load_config(path: Path) -> AuditConfig:
+    """Load and validate a JSON audit configuration file."""
     data = json.loads(path.read_text(encoding="utf-8"))
     jobs = tuple(_parse_job(item) for item in data.get("jobs", []))
     quiet_windows = tuple(

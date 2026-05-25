@@ -23,6 +23,7 @@ class CronExpression:
 
     @classmethod
     def parse(cls, expression: str) -> "CronExpression":
+        """Parse a five-field cron expression into expanded schedule sets."""
         parts = expression.split()
         if len(parts) != 5:
             raise ValueError(f"cron expression must have 5 fields: {expression!r}")
@@ -55,6 +56,7 @@ def _parse_field(raw: str, minimum: int, maximum: int) -> frozenset[int]:
 
 
 def _expand_token(token: str, minimum: int, maximum: int) -> range:
+    """Expand a single cron token, including ranges and step values."""
     if not token:
         raise ValueError("cron field contains an empty token")
 
